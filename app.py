@@ -6,7 +6,7 @@ import pickle
 # =====================
 # LOAD MODEL & DATA
 # =====================
-with open("bangalore_home_prices_model.pkl", "rb") as f:
+with open("bangalore_house_price.pkl", "rb") as f:
     lr_clf = pickle.load(f)
 
 with open("columns.pkl", "rb") as f:

@@ -36,7 +36,7 @@ def predict_price(location, sqft, bath, bhk):
 # =====================
 # STREAMLIT UI
 # =====================
-st.set_page_config(page_title="🏡 House Price Predictor", layout="centered")
+st.set_page_config(page_title="🏡 Bengaluru Housing Price", layout="centered")
 
 st.title("🏡 House Price Prediction App")
 st.caption("Powered by ML · Built with Streamlit")

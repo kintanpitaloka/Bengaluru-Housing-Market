@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import pickle
+import json
+
 
 # =====================
 # LOAD MODEL & DATA
@@ -9,9 +11,9 @@ import pickle
 with open("bengaluru_house_price.pkl", "rb") as f:
     lr_clf = pickle.load(f)
 
-with open("columns.pkl", "rb") as f:
-    feature_names = pickle.load(f)
-
+with open("columns.json", "r") as f:
+    feature_names = json.load(f)
+    
 # =====================
 # PREDICTION FUNCTION
 # =====================

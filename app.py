@@ -1,31 +1,35 @@
 import streamlit as st
 import numpy as np
-import pandas as pd
 import pickle
 import json
-
 
 # =====================
 # LOAD MODEL & DATA
 # =====================
-with open("bengaluru_house_price.pkl", "rb") as f:
-    lr_clf = pickle.load(f)
+@st.cache_resource
+def load_model():
+    with open("bengaluru_house_price.pickle", "rb") as f:
+        model = pickle.load(f)
 
-with open("columns.json", "r") as f:
-    feature_names = json.load(f)
-    
+    with open("columns.json", "r") as f:
+        data = json.load(f)
+        columns = data["data_columns"]
+
+    return model, columns
+
+lr_clf, feature_names = load_model()
+
 # =====================
 # PREDICTION FUNCTION
 # =====================
 def predict_price(location, sqft, bath, bhk):
     x = np.zeros(len(feature_names))
-    x[0] = sqft
-    x[1] = bath
-    x[2] = bhk
+    x[0], x[1], x[2] = sqft, bath, bhk
 
     if location in feature_names:
-        loc_index = feature_names.index(location)
-        x[loc_index] = 1
+        x[feature_names.index(location)] = 1
+    else:
+        st.warning("Lokasi belum dikenali, prediksi pakai baseline")
 
     return lr_clf.predict([x])[0]
 
@@ -40,9 +44,9 @@ st.caption("Powered by ML · Built with Streamlit")
 locations = feature_names[3:]
 
 location = st.selectbox("📍 Location", locations)
-sqft = st.number_input("📐 Total Square Feet", min_value=300)
-bath = st.number_input("🛁 Bathrooms", min_value=1)
-bhk = st.number_input("🛏️ BHK", min_value=1)
+sqft = st.number_input("📐 Total Square Feet", min_value=300, step=50)
+bath = st.number_input("🛁 Bathrooms", min_value=1, step=1)
+bhk = st.number_input("🛏️ BHK", min_value=1, step=1)
 
 if st.button("🚀 Predict Price"):
     price = predict_price(location, sqft, bath, bhk)
